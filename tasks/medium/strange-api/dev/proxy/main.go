@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -30,42 +29,35 @@ func mix[T any](slice []T) {
 }
 
 const (
-	timeout         = time.Second * 30
-	shutdownTimeout = time.Second * 10
+	timeout         = time.Second * 10
+	shutdownTimeout = time.Second * 2
 )
 
 func ioDeadline() time.Time {
 	return time.Now().Add(timeout)
 }
 
-var httpEndLine = []byte{'\r', '\n'}
-
 func processLine(rc net.Conn, r *bufio.Reader, wc net.Conn, w *bufio.Writer) error {
-	read := func() ([]byte, error) {
-		rc.SetReadDeadline(ioDeadline())
-		return r.ReadBytes('\n')
-	}
+	rc.SetReadDeadline(ioDeadline())
+	data, rErr := r.ReadBytes('\n')
 
-	data, rErr := read()
-	for !bytes.HasSuffix(data, httpEndLine) && rErr == nil {
-		var part []byte
-		part, rErr = read()
-		data = append(data, part...)
-	}
-
-	if bytes.HasSuffix(data, httpEndLine) {
-		data = data[:len(data)-2]
-	}
-	mix(data)
-	wc.SetWriteDeadline(ioDeadline())
-	_, wrErr := w.Write(append(data, '\r', '\n'))
-	w.Flush()
-
-	if rErr == nil || rErr == io.EOF {
-		if wrErr == nil {
-			return nil
+	var wrErr error
+	if len(data) > 0 {
+		if data[len(data)-1] == '\n' {
+			data = data[:len(data)-1]
 		}
+		mix(data)
+		wc.SetWriteDeadline(ioDeadline())
+		_, wrErr = w.Write(append(data, '\n'))
+		w.Flush()
+	}
+
+	if rErr == nil && wrErr == nil {
+		return nil
+	} else if rErr == nil {
 		return fmt.Errorf("writing line: %w", wrErr)
+	} else if rErr == io.EOF {
+		return io.EOF
 	}
 	return fmt.Errorf("reading line: %w", rErr)
 }
@@ -81,7 +73,9 @@ func proxy(done <-chan struct{}, from net.Conn, to net.Conn) error {
 		default:
 		}
 
-		if err := processLine(from, fromb, to, tob); err != nil {
+		if err := processLine(from, fromb, to, tob); err == io.EOF {
+			return nil
+		} else if err != nil {
 			return err
 		}
 	}
@@ -177,7 +171,10 @@ func (p *Proxy) handle(c net.Conn) error {
 	var closeOnce sync.Once
 	closeDone := func() {
 		closeOnce.Do(func() {
-			close(done)
+			// close after timeout to allow writers/readers to finish
+			time.AfterFunc(timeout, func() {
+				close(done)
+			})
 		})
 	}
 
