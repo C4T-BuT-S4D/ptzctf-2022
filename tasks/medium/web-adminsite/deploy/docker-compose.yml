@@ -1,0 +1,15 @@
+version: '2.4'
+
+services:
+  admin_site_php:
+    build: .
+    ports:
+      - "5588:80"
+    restart: unless-stopped
+    mem_limit: 256m 
+    pids_limit: 256
+    cpus: 1
+    environment:
+      - FLAG=ptzctf{46e26a4ee3c750157f5cc009d66393}
+
+    
