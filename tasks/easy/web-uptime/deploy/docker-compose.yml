@@ -4,8 +4,6 @@ services:
   app-instance-1: &app
     image: ptzctf/uptime/app
     build: ./app
-    ports:
-      - 80
     restart: unless-stopped
     pids_limit: 64
     cpus: 1
@@ -18,8 +16,6 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - 9090:9090
   dashboard:
     image: ptzctf/uptime/dashboard
     build: ./dashboard
