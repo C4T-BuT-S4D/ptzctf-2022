@@ -33,13 +33,23 @@ pub const Server = struct {
     fn runErr(self: *Server) !void {
         const builder = http.router.Builder(*Context);
 
-        try http.listenAndServe(self.allocator, self.address, &self.context, comptime http.router.Router(*Context, &.{ builder.get("/", index), builder.get("/metrics", metrics) }));
+        try http.listenAndServe(self.allocator, self.address, &self.context, comptime LoggingMiddleware(*Context, http.router.Router(*Context, &.{ builder.get("/", index), builder.get("/metrics", metrics) })));
     }
 };
 
 const Context = struct {};
 
+fn LoggingMiddleware(comptime CtxT: type, comptime handler: http.RequestHandler(CtxT)) http.RequestHandler(CtxT) {
+    return struct {
+        pub fn serve(ctx: CtxT, response: *http.Response, request: http.Request) !void {
+            std.log.info("serving {any} {s}", .{ request.method(), request.path() });
+            return handler(ctx, response, request);
+        }
+    }.serve;
+}
+
 fn index(_: *Context, response: *http.Response, _: http.Request) !void {
+    try response.headers.put("Content-Type", "text/html");
     try response.writer().writeAll(
         \\<!DOCTYPE html>
         \\<html>
