@@ -9,7 +9,7 @@ pub fn build(b: *std.build.Builder) void {
     exe.setBuildMode(mode);
     exe.use_stage1 = true;
 
-    exe.addPackage(.{ .name = "zhp", .source = .{ .path = "vendor/github.com/frmdstryr/zhp/src/zhp.zig" } });
+    exe.addPackage(.{ .name = "http", .source = .{ .path = "lib/http/http.zig" } });
 
     exe.install();
 }

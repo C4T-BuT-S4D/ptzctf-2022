@@ -6,8 +6,8 @@ RUN apk update && \
         xz
 
 WORKDIR /zig
-RUN curl https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.5+ddb9eac05.tar.xz -O && \
-  tar xf zig-linux-x86_64-0.11.0-dev.5+ddb9eac05.tar.xz --strip-components 1
+RUN curl https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.18+81c27677d.tar.xz -o zig-linux-x86_64.tar.xz && \
+  tar xf zig-linux-x86_64.tar.xz --strip-components 1
 
 WORKDIR /build
 COPY . .

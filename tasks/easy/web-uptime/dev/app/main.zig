@@ -8,7 +8,7 @@ pub const routes = web.routes;
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    var server = web.Server.init(gpa.allocator());
+    var server = try web.Server.init(gpa.allocator(), "0.0.0.0:80");
 
     _ = async server.run();
     try graceful.run();
