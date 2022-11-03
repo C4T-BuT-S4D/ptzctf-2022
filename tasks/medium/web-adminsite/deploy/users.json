@@ -1,0 +1,4 @@
+[
+    {"login": "admin", "password": "reallyL0ngPassw0rdToL3ak", "is_admin": true},
+    {"login": "test", "password": "testpassword", "is_admin": false}
+]
