@@ -1,10 +1,5 @@
 FROM python:3.9.6-slim-bullseye
 
-RUN apt-get update && apt-get install -yq gnupg curl
-RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list && \
-    apt-get update && apt-get install -yq google-chrome-stable
-
 WORKDIR /app
 
 COPY app/requirements.txt requirements.txt
