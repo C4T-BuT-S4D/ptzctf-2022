@@ -114,9 +114,9 @@ void view_user(void* user) {
 
 int login() {
     printf("{?} Enter user idx: ");
-    int user_idx = read_integer();
+    uint32_t user_idx = (uint32_t)read_integer();
 
-    if (user_idx > USERS_LIST_MAX_SIZE) {
+    if (user_idx >= USERS_LIST_MAX_SIZE || user_idx < 0) {
         puts("{-} Incorrect user_idx!");
         return 1;
     }
@@ -128,21 +128,21 @@ int login() {
 
     printf("{?} Enter passsword: ");
     int password_size = strlen(gUsersList[user_idx]->password_);
-    char* inputed_passwod = (char*) malloc(password_size);
-    read_into_buffer(inputed_passwod, password_size);
+    char* inputed_password = (char*) malloc(password_size);
+    read_into_buffer(inputed_password, password_size);
 
-    if (!strncmp(inputed_passwod, 
+    if (!strncmp(inputed_password, 
         gUsersList[user_idx]->password_, 
         password_size)) 
     {
         gUser = gUsersList[user_idx];
     } else {
-        free(inputed_passwod);
+        free(inputed_password);
         puts("{-} Incorrect password!");
         return 3;
     }
 
-    free(inputed_passwod);
+    free(inputed_password);
     return 0;
 }
 
