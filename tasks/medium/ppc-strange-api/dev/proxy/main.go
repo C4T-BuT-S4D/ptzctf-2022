@@ -14,16 +14,8 @@ import (
 	"time"
 )
 
-func initIndices() (int, int) {
-	return 1, 2
-}
-
-func nextIndices(i, j int) (int, int) {
-	return i + j, j + i + j
-}
-
 func mix[T any](slice []T) {
-	for l, r := initIndices(); r < len(slice); l, r = nextIndices(l, r) {
+	for l, r := 1, 2; r < len(slice); l, r = l+r, r+l+r {
 		slice[l], slice[r] = slice[r], slice[l]
 	}
 }

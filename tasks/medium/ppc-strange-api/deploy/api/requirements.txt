@@ -1,2 +1,2 @@
-Flask
-flasgger
+Flask==2.2.2
+flasgger==0.5.4
