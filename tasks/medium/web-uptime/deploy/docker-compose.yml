@@ -1,0 +1,29 @@
+version: "2.4"
+
+services:
+  app-instance-1: &app
+    image: ptzctf/uptime/app
+    build: ./app
+    restart: unless-stopped
+    pids_limit: 64
+    cpus: 1
+    mem_limit: 128m
+    environment:
+      - FLAG=ptzctf{metrics-are-fun}
+  app-instance-2:
+    <<: *app
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  dashboard:
+    image: ptzctf/uptime/dashboard
+    build: ./dashboard
+    ports:
+      - 44444:80
+    restart: unless-stopped
+    pids_limit: 64
+    cpus: 2
+    mem_limit: 256m
+    environment:
+      PROMETHEUS_API: prometheus:9090

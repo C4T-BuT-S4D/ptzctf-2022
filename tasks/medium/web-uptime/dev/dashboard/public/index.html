@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+  />
+  <script defer src="/script.js"></script>
+</head>
+<body style="max-width: 90rem" class="mx-auto">
+  <header>
+    <nav class="navbar pt-4 px-4 pb-2 has-background-link-light">
+      <div class="navbar-brand">
+        <h1 class="is-size-3">Uptime Dashboard</h1>
+      </div>
+    </nav>
+  </header>
+  <section class="section">
+    <div class="container">
+      <template id="card-instance-ok"
+        ><div class="notification box is-success">
+          <h2 class="title is-4"></h2>
+          <p class="content is-medium">Status: up</p>
+        </div></template
+      >
+      <template id="card-instance-down"
+        ><div class="notification box is-danger">
+          <h2 class="title is-4"></h2>
+          <p class="content is-medium">Status: down</p>
+        </div></template
+      >
+      <div class="columns">
+        <div class="column" id="column-1"></div>
+        <div class="column" id="column-2"></div>
+      </div>
+    </div>
+  </section>
+</body>
