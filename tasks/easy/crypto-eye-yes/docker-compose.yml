@@ -1,0 +1,13 @@
+version: '2.4'
+
+services:
+  eye-yes:
+    build: deploy
+    ports:
+      - 17171:31337
+    environment:
+      - FLAG=ptzctf{AES_k3y_rec0very}
+    cpus: 1
+    pids_limit: 256
+    mem_limit: 512m
+    restart: unless-stopped
