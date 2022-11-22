@@ -43,6 +43,8 @@ block1 ^ block3 = E(key) ^ key ^ E(key) = key
 
 Получаем ключ, который является флагом. Осталось обернуть в `ptzctf{}`.
 
+**Пример решения**: [solution/solver.py](solution/solver.py)
+
 ## Флаг
 
 ```
