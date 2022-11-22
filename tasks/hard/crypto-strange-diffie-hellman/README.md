@@ -30,6 +30,8 @@ g ^ 1858542031 == 1 (mod p)
 
 Когда мы нашли alice_secret, можем посчитать alice_shared и расшифровать флаг.
 
+**Пример решения**: [solution/solver.py](solution/solver.py)
+
 ## Флаг
 
 ```
