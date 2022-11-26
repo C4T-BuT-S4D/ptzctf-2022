@@ -39,7 +39,7 @@ def xor(a, b):
 
 
 def attack(io):
-    ct = encrypt(io, b'\x00' * 16)
+    ct = encrypt(io, b'\x00' * 32)
     pt = decrypt(io, ct[16:])
 
     flag = xor(ct[:16], pt)
